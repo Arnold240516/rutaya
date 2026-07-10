@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rutaya – Compra tu pasaje, continúa tu camino</title>
+
+<!-- PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#E05A1E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Rutaya">
+<link rel="apple-touch-icon" href="/logo.png">
+
+<!-- SEO -->
+<meta name="description" content="Compra tu pasaje interprovincial entre Abancay, Cusco, Andahuaylas y Lima. Elige tu asiento y paga en segundos con Yape, Plin o tarjeta.">
+<meta name="keywords" content="pasajes, bus, Abancay, Cusco, Andahuaylas, Lima, transporte interprovincial, Apurímac">
+<meta property="og:title" content="Rutaya – Compra tu pasaje">
+<meta property="og:description" content="La plataforma más fácil para comprar pasajes entre Abancay, Cusco y Lima.">
+<meta property="og:image" content="/logo.png">
+<meta property="og:type" content="website">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#E05A1E;--primary-dark:#c44d17;--dark:#1A1A2E;--dark2:#16213E;
+  --bg:#F8F9FA;--surface:#fff;--border:#E5E7EB;--text:#1A1A2E;--text-muted:#6B7280;
+  --success:#10B981;--radius:14px;--shadow:0 4px 24px rgba(0,0,0,.08);
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+/* ─── NAV ─── */
+.navbar{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(26,26,46,.97);backdrop-filter:blur(12px);height:66px;display:flex;align-items:center;padding:0 5%;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.06)}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo img{height:44px;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.3))}
+.nav-logo span{font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:#fff;letter-spacing:-0.5px}
+.nav-links{display:flex;gap:28px}
+.nav-links a{color:rgba(255,255,255,.75);text-decoration:none;font-size:14px;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:#fff}
+.nav-cta{display:flex;gap:10px}
+#navUser{display:flex;align-items:center;gap:12px}
+#navUserName{color:rgba(255,255,255,.85);font-size:14px;font-weight:600}
+/* ─── BUTTONS ─── */
+.btn-ghost{background:transparent;border:1.5px solid rgba(255,255,255,.3);color:#fff;padding:8px 18px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-ghost:hover{background:rgba(255,255,255,.1)}
+.btn-primary{background:var(--primary);color:#fff;border:none;padding:9px 20px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-primary:hover{background:var(--primary-dark)}
+.btn-full{width:100%;background:var(--primary);color:#fff;border:none;padding:13px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;margin-top:4px}
+.btn-full:hover{background:var(--primary-dark)}
+.btn-full:disabled{opacity:.6;cursor:not-allowed}
+/* ─── HERO ─── */
+.hero{min-height:100vh;background:linear-gradient(to right,rgba(10,8,30,0.92) 0%,rgba(15,12,41,0.85) 45%,rgba(15,12,41,0.4) 100%),url('/hero-bg.png') center center/cover no-repeat;display:flex;align-items:center;padding:100px 5% 60px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0) 60%,rgba(10,8,30,0.7) 100%)}
+.hero-content{max-width:580px;position:relative;z-index:1}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(224,90,30,.15);border:1px solid rgba(224,90,30,.3);color:#f97316;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600;margin-bottom:20px}
+.hero h1{font-family:'Sora',sans-serif;font-size:clamp(36px,5vw,58px);font-weight:900;color:#fff;line-height:1.1;margin-bottom:18px}
+.hero h1 .accent{color:var(--primary)}
+.hero p{color:rgba(255,255,255,.7);font-size:18px;line-height:1.6;margin-bottom:32px}
+.hero-stats{display:flex;gap:32px;margin-top:36px}
+.hero-stat .num{font-family:'Sora',sans-serif;font-size:28px;font-weight:800;color:#fff}
+.hero-stat .lbl{font-size:13px;color:rgba(255,255,255,.5)}
+/* ─── BUSCADOR ─── */
+.search-box{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:24px;margin-bottom:32px;backdrop-filter:blur(8px)}
+.search-grid{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end}
+.search-field label{font-size:12px;font-weight:600;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px}
+.search-field select,.search-field input[type="date"]{width:100%;padding:11px 14px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.15);border-radius:10px;color:#fff;font-size:14px;font-family:inherit;outline:none}
+.search-field select:focus,.search-field input[type="date"]:focus{border-color:var(--primary)}
+.search-field select option{background:#302B63;color:#fff}
+.btn-search{background:var(--primary);color:#fff;border:none;padding:12px 24px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;white-space:nowrap;height:46px}
+.btn-search:hover{background:var(--primary-dark)}
+/* ─── FEATURES ─── */
+.features{padding:80px 5%;background:#fff}
+.section-title{font-family:'Sora',sans-serif;font-size:32px;font-weight:800;text-align:center;margin-bottom:8px}
+.section-sub{color:var(--text-muted);text-align:center;font-size:16px;margin-bottom:48px}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px;max-width:1100px;margin:0 auto}
+.feature-card{background:var(--bg);border-radius:var(--radius);padding:28px;border:1.5px solid var(--border);text-align:center;transition:transform .2s,box-shadow .2s}
+.feature-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.feature-icon{font-size:40px;margin-bottom:14px}
+.feature-card h3{font-size:16px;font-weight:700;margin-bottom:8px}
+.feature-card p{font-size:14px;color:var(--text-muted);line-height:1.5}
+/* ─── RUTAS ─── */
+.rutas-section{padding:80px 5%;background:var(--bg)}
+.rutas-header{display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:0 auto 32px}
+.rutas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;max-width:1200px;margin:0 auto}
+.ruta-card{background:var(--surface);border-radius:var(--radius);overflow:hidden;border:1.5px solid var(--border);cursor:pointer;transition:all .2s;box-shadow:var(--shadow)}
+.ruta-card:hover{transform:translateY(-4px);border-color:var(--primary)}
+.ruta-img{height:140px;display:flex;align-items:center;justify-content:center;position:relative}
+.ruta-badge{position:absolute;top:10px;left:10px;background:var(--primary);color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
+.ruta-seats-badge{position:absolute;top:10px;right:10px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
+.seat-available{background:#dcfce7;color:#16a34a}
+.seat-few{background:#fef9c3;color:#854d0e}
+.seat-full{background:#fee2e2;color:#dc2626}
+.ruta-body{padding:16px}
+.ruta-route{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px;margin-bottom:8px}
+.ruta-route .arrow{color:var(--primary)}
+.ruta-meta{display:flex;gap:14px;font-size:12px;color:var(--text-muted);margin-bottom:14px}
+.ruta-price{display:flex;justify-content:space-between;align-items:center}
+.ruta-price .since{font-size:11px;color:var(--text-muted)}
+.ruta-price .amount{font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:var(--primary)}
+.btn-reservar{background:var(--primary);color:#fff;border:none;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer}
+.btn-reservar:hover{background:var(--primary-dark)}
+/* ─── FOOTER ─── */
+.footer{background:var(--dark);color:rgba(255,255,255,.7);padding:60px 5% 24px}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.footer-brand img{height:56px;object-fit:contain;margin-bottom:12px}
+.footer-brand p{font-size:14px;line-height:1.6;max-width:260px}
+.footer-col h4{color:#fff;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px}
+.footer-col a{display:block;color:rgba(255,255,255,.6);text-decoration:none;font-size:14px;margin-bottom:8px;transition:color .2s}
+.footer-col a:hover{color:#fff}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.08);padding-top:20px;display:flex;justify-content:space-between;align-items:center;font-size:13px}
+/* ─── MODALES ─── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;padding:16px}
+.modal-overlay.active{opacity:1;pointer-events:all}
+.modal{background:var(--surface);border-radius:20px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;transform:translateY(20px);transition:transform .2s}
+.modal-overlay.active .modal{transform:translateY(0)}
+.modal-lg{max-width:720px}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1.5px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:1}
+.modal-header-left{display:flex;align-items:center;gap:12px}
+.modal-header-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--primary),#f97316);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.modal-header h3{font-size:17px;font-weight:800}
+.modal-header p{font-size:13px;color:var(--text-muted)}
+.btn-close{background:var(--bg);border:none;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+.modal-body{padding:24px}
+/* ─── AUTH MODAL ─── */
+.tabs-auth{display:flex;gap:4px;background:var(--bg);border-radius:10px;padding:4px;margin-bottom:20px}
+.tab-btn{flex:1;padding:8px;border:none;background:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;color:var(--text-muted)}
+.tab-btn.active{background:var(--surface);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+.input-group{margin-bottom:14px}
+.input-group label{display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:5px}
+.input-group input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:14px;font-family:inherit;outline:none;transition:border-color .2s}
+.input-group input:focus{border-color:var(--primary)}
+.input-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.terms{font-size:12px;color:var(--text-muted);margin-top:10px;text-align:center}
+.terms a{color:var(--primary)}
+/* ─── SEAT MODAL ─── */
+.seat-modal-body{display:grid;grid-template-columns:1fr 260px;gap:20px}
+.seats-container h4{font-size:13px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+.seats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.seat-btn{aspect-ratio:1;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s}
+.seat-btn.available{background:#dcfce7;color:#16a34a}
+.seat-btn.available:hover{background:#16a34a;color:#fff;transform:scale(1.1)}
+.seat-btn.taken{background:#f3f4f6;color:#d1d5db;cursor:not-allowed}
+.seat-btn.selected{background:var(--primary);color:#fff;transform:scale(1.1)}
+.seat-divider{grid-column:1/-1;height:1px;background:var(--border);margin:4px 0}
+.seat-legend{display:flex;gap:14px;margin-top:12px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-muted)}
+.legend-dot{width:12px;height:12px;border-radius:3px}
+.seat-info-panel{}
+.trip-summary{background:var(--bg);border-radius:12px;padding:14px;margin-bottom:14px}
+.trip-summary-header{margin-bottom:10px}
+.trip-summary .route{font-weight:800;font-size:15px}
+.trip-summary .date{font-size:12px;color:var(--text-muted)}
+.trip-detail-row{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid var(--border)}
+.trip-detail-row:last-child{border-bottom:none}
+.trip-detail-row .lbl{color:var(--text-muted)}
+.trip-detail-row .val{font-weight:600}
+.selected-seat-box{background:linear-gradient(135deg,var(--primary),#f97316);border-radius:12px;padding:16px;text-align:center;color:#fff;margin-bottom:14px}
+.selected-seat-box .seat-num{font-family:'Sora',sans-serif;font-size:42px;font-weight:900}
+.selected-seat-box .seat-type{font-size:13px;opacity:.85}
+.btn-confirm{width:100%;background:var(--dark);color:#fff;border:none;padding:12px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-confirm:hover:not(:disabled){background:#302B63}
+.btn-confirm:disabled{opacity:.4;cursor:not-allowed}
+/* ─── PAGO MODAL ─── */
+.resumen-route{display:flex;align-items:center;justify-content:center;gap:12px;font-family:'Sora',sans-serif;font-size:22px;font-weight:800;margin-bottom:20px}
+.city{font-size:18px}
+.ticket-arrow{color:var(--primary);font-size:22px}
+.resumen-details{background:var(--bg);border-radius:12px;padding:14px;margin-bottom:16px}
+.detail-row{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--border)}
+.detail-row:last-child{border-bottom:none}
+.detail-row .lbl{color:var(--text-muted)}
+.detail-row .val{font-weight:600}
+.resumen-total{display:flex;justify-content:space-between;align-items:center;padding:12px 0;font-size:15px;font-weight:700}
+.resumen-total .amount{font-family:'Sora',sans-serif;font-size:24px;font-weight:800;color:var(--primary)}
+.pay-methods{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.pay-method{border:2px solid var(--border);border-radius:10px;padding:12px 6px;text-align:center;cursor:pointer;transition:all .2s;font-size:12px;font-weight:600}
+.pay-method:hover,.pay-method.active{border-color:var(--primary);background:#fff7ed;color:var(--primary)}
+.pay-method .icon{font-size:22px;display:block;margin-bottom:4px}
+.pago-form{display:none}
+.pago-form.active{display:block}
+.pago-form .input-group{margin-bottom:10px}
+.btn-pagar{width:100%;background:var(--success);color:#fff;border:none;padding:13px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-pagar:hover{background:#059669}
+.btn-pagar:disabled{opacity:.6;cursor:not-allowed}
+/* Formulario invitado */
+.guest-form-box{background:#fffbeb;border:1.5px solid #fde68a;border-radius:12px;padding:16px;margin-bottom:16px}
+.guest-form-box .notice{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#92400e;margin-bottom:12px}
+/* ─── SUCCESS PAGE ─── */
+.success-page{position:fixed;inset:0;background:linear-gradient(135deg,#0F0C29,#302B63);z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .3s}
+.success-page.active{opacity:1;pointer-events:all}
+.success-icon{width:72px;height:72px;background:var(--success);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:16px}
+.success-page h2{font-family:'Sora',sans-serif;color:#fff;font-size:26px;margin-bottom:6px}
+.success-page p{color:rgba(255,255,255,.7);font-size:15px;margin-bottom:24px}
+.ticket-box{background:#fff;border-radius:16px;padding:24px;width:100%;max-width:380px;border:2px dashed var(--primary);margin-bottom:20px}
+.ticket-header{text-align:center;margin-bottom:16px}
+.ticket-logo{height:40px;object-fit:contain;margin-bottom:4px}
+.ticket-route{font-family:'Sora',sans-serif;font-size:18px;font-weight:800;margin:8px 0 4px}
+.ticket-arrow{color:var(--primary)}
+.ticket-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px}
+.ticket-row:last-child{border-bottom:none}
+.ticket-row .lbl{color:var(--text-muted)}
+.ticket-row .val{font-weight:700}
+.ticket-code{text-align:center;background:var(--dark);color:#fff;padding:12px;border-radius:10px;font-size:16px;font-weight:800;letter-spacing:2px;margin-top:14px}
+.success-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.btn-lg{padding:11px 22px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;border:none;transition:all .2s}
+.btn-lg.primary{background:var(--primary);color:#fff}
+.btn-lg.secondary{background:rgba(255,255,255,.1);color:#fff;border:1.5px solid rgba(255,255,255,.25)}
+/* ─── TOAST ─── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--dark);color:#fff;padding:12px 22px;border-radius:10px;font-size:14px;font-weight:600;z-index:500;transition:transform .3s;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+/* ─── MODALES ADICIONALES ─── */
+.modal-rutas-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ruta-modal-card{background:var(--bg);border:1.5px solid var(--border);border-radius:12px;padding:14px;cursor:pointer;transition:all .2s}
+.ruta-modal-card:hover{border-color:var(--primary);background:#fff7ed}
+.route-title{font-weight:800;font-size:14px;display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.route-arrow{color:var(--primary)}
+.route-info{font-size:12px;color:var(--text-muted);display:flex;gap:10px;margin-bottom:8px}
+.route-price{font-family:'Sora',sans-serif;font-size:18px;font-weight:800;color:var(--primary)}
+/* dark mode */
+.hidden{display:none!important}
+body.dark-mode{--bg:#1a1a2e;--surface:#16213e;--border:#2d3561;--text:#e2e8f0;--text-muted:#94a3b8}
+@media(max-width:768px){
+  .search-grid{grid-template-columns:1fr 1fr}
+  .seat-modal-body{grid-template-columns:1fr}
+  .modal-rutas-grid{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr 1fr}
+  .nav-links{display:none}
+  .hero h1{font-size:32px}
+  .hero-stats{gap:20px}
+}
+/* ─── PWA INSTALL BANNER ─── */
+#installBanner{display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;border-radius:16px;padding:14px 20px;box-shadow:0 8px 32px rgba(0,0,0,.4);z-index:400;align-items:center;gap:14px;max-width:420px;width:calc(100% - 32px);border:1px solid rgba(255,255,255,.1)}
+#installBanner img{width:44px;height:44px;border-radius:10px;object-fit:contain;background:#fff;padding:4px}
+#installBanner .install-text .title{font-weight:800;font-size:14px}
+#installBanner .install-text .sub{font-size:12px;color:rgba(255,255,255,.6);margin-top:2px}
+#installBanner .install-btns{display:flex;gap:8px;margin-left:auto}
+.btn-install{background:var(--primary);color:#fff;border:none;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+.btn-install-close{background:transparent;color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.2);padding:8px 12px;border-radius:8px;font-size:13px;cursor:pointer}
+.btn-install-close:hover{color:#fff}
+@media(max-width:480px){#installBanner{flex-wrap:wrap}#installBanner .install-btns{width:100%;justify-content:flex-end}}
+</style>
+</head>
+<body>
+
+<!-- ══════ NAVBAR ══════ -->
+<nav class="navbar">
+  <a href="#" class="nav-logo">
+    <img src="/logo.png" alt="Rutaya">
+    <span>Rutaya</span>
+  </a>
+  <div class="nav-links">
+    <a href="#rutas">Rutas</a>
+    <a href="#como-usar">¿Cómo funciona?</a>
+    <a href="/terminos">Términos</a>
+    <a href="/privacidad">Privacidad</a>
+  </div>
+  <div class="nav-cta" id="navCta">
+    <button class="btn-ghost" onclick="openModal('login')">Iniciar sesión</button>
+    <button class="btn-primary" onclick="openModal('register')">Registrarse</button>
+  </div>
+  <div id="navUser" style="display:none;align-items:center;gap:12px;">
+    <span id="navUserName" style="color:rgba(255,255,255,.85);font-size:14px;font-weight:600;"></span>
+    <button class="btn-ghost" onclick="openOpcionesModal()">⚙️ Mi cuenta</button>
+    <button class="btn-primary" onclick="window.open('/admin','_blank')">Admin</button>
+  </div>
+</nav>
+
+<!-- ══════ HERO ══════ -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">🚌 Transporte interprovincial digital</div>
+    <h1>Compra tu pasaje,<br><span class="accent">continúa tu camino</span></h1>
+    <p>La plataforma más fácil para comprar pasajes entre Abancay, Cusco, Andahuaylas y Lima. Elige tu asiento, paga en segundos.</p>
+
+    <!-- BUSCADOR -->
+    <div class="search-box">
+      <div class="search-grid">
+        <div class="search-field">
+          <label>Origen</label>
+          <select id="origen">
+            <option value="">¿De dónde sales?</option>
+            <option value="abancay">Abancay</option>
+            <option value="cusco">Cusco</option>
+            <option value="andahuaylas">Andahuaylas</option>
+            <option value="lima">Lima</option>
+            <option value="arequipa">Arequipa</option>
+          </select>
+        </div>
+        <div class="search-field">
+          <label>Destino</label>
+          <select id="destino">
+            <option value="">¿A dónde vas?</option>
+            <option value="abancay">Abancay</option>
+            <option value="cusco">Cusco</option>
+            <option value="andahuaylas">Andahuaylas</option>
+            <option value="lima">Lima</option>
+            <option value="arequipa">Arequipa</option>
+          </select>
+        </div>
+        <div class="search-field">
+          <label>Fecha</label>
+          <input type="date" id="fechaBusqueda">
+        </div>
+        <button class="btn-search" onclick="buscarRutas()">🔍 Buscar</button>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">6+</div><div class="lbl">Rutas activas</div></div>
+      <div class="hero-stat"><div class="num">500+</div><div class="lbl">Pasajeros al mes</div></div>
+      <div class="hero-stat"><div class="num">3</div><div class="lbl">Métodos de pago</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ FEATURES ══════ -->
+<section class="features" id="como-usar">
+  <p class="section-title">¿Por qué elegir Rutaya?</p>
+  <p class="section-sub">Comprar tu pasaje nunca fue tan fácil</p>
+  <div class="features-grid">
+    <div class="feature-card"><div class="feature-icon">⚡</div><h3>Compra en segundos</h3><p>Elige tu ruta, fecha y asiento. Sin filas, sin llamadas, sin esperas.</p></div>
+    <div class="feature-card"><div class="feature-icon">🔒</div><h3>Pago seguro</h3><p>Acepta Yape, Plin y tarjeta. Tus datos siempre protegidos.</p></div>
+    <div class="feature-card"><div class="feature-icon">📱</div><h3>Boleto digital</h3><p>Recibe tu código de ticket al instante. Muéstralo en tu celular al abordar.</p></div>
+    <div class="feature-card"><div class="feature-icon">🗺️</div><h3>Elige tu asiento</h3><p>Visualiza el mapa del bus y selecciona exactamente el asiento que prefieres.</p></div>
+  </div>
+</section>
+
+<!-- ══════ RUTAS ══════ -->
+<section class="rutas-section" id="rutas">
+  <div class="rutas-header">
+    <div>
+      <p style="font-family:'Sora',sans-serif;font-size:28px;font-weight:800;">Rutas disponibles</p>
+      <p style="color:var(--text-muted);font-size:15px;margin-top:4px;">Selecciona tu destino y elige el mejor horario</p>
+    </div>
+    <button class="btn-primary" onclick="openRutasModal()">Ver todas las rutas →</button>
+  </div>
+  <div class="rutas-grid" id="rutasGrid">
+    <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted);">Cargando rutas...</div>
+  </div>
+</section>
+
+<!-- ══════ FOOTER ══════ -->
+<footer class="footer">
+  <div class="footer-top">
+    <div class="footer-brand">
+      <img src="/logo.png" alt="Rutaya">
+      <p>La plataforma de compra de pasajes más confiable para Apurímac y Cusco.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Empresa</h4>
+      <a href="#">Acerca de</a>
+      <a href="/terminos">Términos de uso</a>
+      <a href="/privacidad">Privacidad</a>
+    </div>
+    <div class="footer-col">
+      <h4>Soporte</h4>
+      <a href="#" onclick="openSoporteModal();return false;">Centro de ayuda</a>
+      <a href="https://wa.me/51987654321" target="_blank">WhatsApp</a>
+      <a href="mailto:soporte@rutaya.pe">soporte@rutaya.pe</a>
+    </div>
+    <div class="footer-col">
+      <h4>Rutas populares</h4>
+      <a href="#" onclick="openRutasModal();return false;">Abancay → Cusco</a>
+      <a href="#" onclick="openRutasModal();return false;">Abancay → Lima</a>
+      <a href="#" onclick="openRutasModal();return false;">Cusco → Lima</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Rutaya. Todos los derechos reservados.</span>
+    <span>Hecho con ❤️ en Abancay, Apurímac</span>
+  </div>
+</footer>
+
+<!-- ══════ MODAL AUTH ══════ -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-header-icon"><img src="/logo.png" style="height:24px;object-fit:contain;"></div>
+        <div><h3 id="modalTitle">Bienvenido a Rutaya</h3><p>Tu plataforma de pasajes interprovinciales</p></div>
+      </div>
+      <button class="btn-close" onclick="closeModal('authModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="tabs-auth">
+        <button class="tab-btn active" onclick="switchTab('login')">Iniciar sesión</button>
+        <button class="tab-btn" onclick="switchTab('register')">Crear cuenta</button>
+      </div>
+      <div class="tab-pane active" id="tab-login">
+        <div class="input-group"><label>Correo electrónico</label><input type="email" id="loginEmail" placeholder="tu@correo.com"></div>
+        <div class="input-group"><label>Contraseña</label><input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')simLogin()"></div>
+        <button class="btn-full" onclick="simLogin()">Iniciar sesión</button>
+        <p class="terms">¿Olvidaste tu contraseña? <a href="#" onclick="openRecuperarModal();return false;">Recupérala aquí</a></p>
+      </div>
+      <div class="tab-pane" id="tab-register">
+        <div class="input-row">
+          <div class="input-group"><label>Nombre *</label><input type="text" id="regNombre" placeholder="Tu nombre"></div>
+          <div class="input-group"><label>Apellido</label><input type="text" id="regApellido" placeholder="Tu apellido"></div>
+        </div>
+        <div class="input-group"><label>Correo electrónico *</label><input type="email" id="regEmail" placeholder="tu@correo.com"></div>
+        <div class="input-group"><label>Teléfono</label><input type="tel" id="regTel" placeholder="+51 999 999 999"></div>
+        <div class="input-group"><label>Contraseña * (mínimo 6 caracteres)</label><input type="password" id="regPass" placeholder="••••••••"></div>
+        <button class="btn-full" onclick="simRegister()">Crear mi cuenta gratis</button>
+        <p class="terms">Al registrarte aceptas los <a href="/terminos" target="_blank">Términos de uso</a> y la <a href="/privacidad" target="_blank">Política de privacidad</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ MODAL RUTAS ══════ -->
+<div class="modal-overlay" id="rutasModal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <div class="modal-header-left"><div class="modal-header-icon">🗺️</div><div><h3>Todas las rutas</h3><p>Elige tu destino</p></div></div>
+      <button class="btn-close" onclick="closeModal('rutasModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-rutas-grid" id="rutasModalGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ MODAL ASIENTOS ══════ -->
+<div class="modal-overlay" id="seatModal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <div class="modal-header-left"><div class="modal-header-icon">💺</div><div><h3 id="seatModalRoute">Selecciona tu asiento</h3><p>Toca un asiento verde disponible</p></div></div>
+      <button class="btn-close" onclick="closeModal('seatModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="seat-modal-body">
+        <div class="seats-container">
+          <h4>Mapa del bus</h4>
+          <div class="seats-grid" id="seatsGrid"></div>
+          <div class="seat-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#dcfce7;"></div>Disponible</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--primary);"></div>Seleccionado</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#f3f4f6;"></div>Ocupado</div>
+          </div>
+        </div>
+        <div class="seat-info-panel">
+          <div class="input-group" style="margin-bottom:14px;">
+            <label style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px;">📅 Fecha de viaje</label>
+            <input type="date" id="fechaViajeInput" onchange="cambiarFechaViaje()" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;">
+          </div>
+          <div class="trip-summary">
+            <div class="trip-summary-header">
+              <div class="route" id="seatTripRoute">Selecciona una ruta</div>
+              <div class="date" id="seatTripFecha" style="font-size:12px;color:var(--text-muted);"></div>
+            </div>
+            <div class="trip-detail-row"><span class="lbl">Empresa</span><span class="val" id="seatTripEmpresa">—</span></div>
+            <div class="trip-detail-row"><span class="lbl">Salida</span><span class="val" id="seatTripSalida">—</span></div>
+            <div class="trip-detail-row"><span class="lbl">Duración</span><span class="val" id="seatTripDuracion">—</span></div>
+            <div class="trip-detail-row"><span class="lbl">Precio base</span><span class="val" id="seatPrice">—</span></div>
+          </div>
+          <div class="selected-seat-box">
+            <div class="seat-num" id="selectedSeatNum">—</div>
+            <div class="seat-type" id="selectedSeatType">Toca un asiento verde</div>
+          </div>
+          <button class="btn-confirm" id="btnConfirmSeat" onclick="confirmarAsiento()" disabled>Continuar al pago →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ MODAL PAGO ══════ -->
+<div class="modal-overlay" id="pagosModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-header-left"><div class="modal-header-icon">💳</div><div><h3>Confirmar y pagar</h3><p>Revisa los detalles antes de pagar</p></div></div>
+      <button class="btn-close" onclick="closeModal('pagosModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="resumen-route">
+        <div class="city" id="resumenOrigen">Origen</div>
+        <div class="ticket-arrow">→</div>
+        <div class="city" id="resumenDestino">Destino</div>
+      </div>
+      <div class="resumen-details">
+        <div class="detail-row"><span class="lbl">Fecha de viaje</span><span class="val" id="resumenFecha">—</span></div>
+        <div class="detail-row"><span class="lbl">Hora salida</span><span class="val" id="resumenHora">—</span></div>
+        <div class="detail-row"><span class="lbl">Asiento</span><span class="val" id="resumenAsiento">—</span></div>
+        <div class="detail-row"><span class="lbl">Empresa</span><span class="val" id="resumenEmpresa">—</span></div>
+        <div class="detail-row"><span class="lbl">Pasajero</span><span class="val" id="resumenPasajero">—</span></div>
+        <div class="detail-row"><span class="lbl">Pasaje</span><span class="val" id="resumenPrecio">—</span></div>
+        <div class="detail-row"><span class="lbl">Comisión de servicio</span><span class="val">S/ 2.00</span></div>
+      </div>
+      <div class="resumen-total"><span>Total a pagar</span><span class="amount" id="resumenTotal">—</span></div>
+
+      <!-- ══ FORMULARIO DATOS INVITADO ══ -->
+      <div class="guest-form-box" id="guestFormBox">
+        <div class="notice">⚠️ No has iniciado sesión — ingresa tus datos para el boleto</div>
+        <div class="input-row">
+          <div class="input-group"><label>Nombre *</label><input type="text" id="gNombre" placeholder="Juan"></div>
+          <div class="input-group"><label>Apellido *</label><input type="text" id="gApellido" placeholder="Pérez"></div>
+        </div>
+        <div class="input-row">
+          <div class="input-group"><label>DNI *</label><input type="text" id="gDni" placeholder="12345678" maxlength="8"></div>
+          <div class="input-group"><label>Teléfono *</label><input type="tel" id="gTelefono" placeholder="999999999"></div>
+        </div>
+        <div class="input-group"><label>Correo electrónico *</label><input type="email" id="gEmail" placeholder="tu@correo.com"></div>
+      </div>
+
+      <!-- MÉTODOS DE PAGO -->
+      <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Método de pago</div>
+      <div class="pay-methods">
+        <div class="pay-method active" onclick="setPayMethod('Yape',this)"><span class="icon">💜</span>Yape</div>
+        <div class="pay-method" onclick="setPayMethod('Plin',this)"><span class="icon">💙</span>Plin</div>
+        <div class="pay-method" onclick="setPayMethod('Tarjeta',this)"><span class="icon">💳</span>Tarjeta</div>
+      </div>
+      <div class="pago-form active" id="form-Yape">
+        <div style="background:#f5f0ff;border-radius:10px;padding:14px;text-align:center;margin-bottom:12px;">
+          <div style="font-size:28px;margin-bottom:4px;">💜</div>
+          <div style="font-weight:700;font-size:15px;">Paga con Yape</div>
+          <div style="font-size:13px;color:var(--text-muted);margin-top:4px;">Número Yape: <strong>+51 987 654 321</strong></div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Envía el monto exacto y confirma aquí</div>
+        </div>
+        <button class="btn-pagar" onclick="confirmarPago('Yape')">✅ Ya pagué con Yape</button>
+      </div>
+      <div class="pago-form" id="form-Plin">
+        <div style="background:#eff6ff;border-radius:10px;padding:14px;text-align:center;margin-bottom:12px;">
+          <div style="font-size:28px;margin-bottom:4px;">💙</div>
+          <div style="font-weight:700;font-size:15px;">Paga con Plin</div>
+          <div style="font-size:13px;color:var(--text-muted);margin-top:4px;">Número Plin: <strong>+51 987 654 321</strong></div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Envía el monto exacto y confirma aquí</div>
+        </div>
+        <button class="btn-pagar" onclick="confirmarPago('Plin')">✅ Ya pagué con Plin</button>
+      </div>
+      <div class="pago-form" id="form-Tarjeta">
+        <div class="input-group"><label>Número de tarjeta</label><input type="text" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)"></div>
+        <div class="input-row">
+          <div class="input-group"><label>Vencimiento</label><input type="text" placeholder="MM/AA" maxlength="5" oninput="formatExp(this)"></div>
+          <div class="input-group"><label>CVV</label><input type="text" placeholder="123" maxlength="3"></div>
+        </div>
+        <button class="btn-pagar" onclick="confirmarPago('Tarjeta')">💳 Pagar con tarjeta</button>
+      </div>
+
+      <p style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:12px;">🔒 Tus datos están protegidos. Al confirmar aceptas los <a href="/terminos" target="_blank">Términos de uso</a>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ MODAL OPCIONES ══════ -->
+<div class="modal-overlay" id="opcionesModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-header-left"><div class="modal-header-icon">⚙️</div><div><h3>Mi cuenta</h3><p>Opciones y configuración</p></div></div>
+      <button class="btn-close" onclick="closeModal('opcionesModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="padding:14px;background:var(--bg);border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:12px;" onclick="openPerfilModal()">
+          <span style="font-size:22px;">👤</span><div><div style="font-weight:700;font-size:14px;">Mi perfil</div><div style="font-size:12px;color:var(--text-muted);">Ver y editar tus datos</div></div>
+        </div>
+        <div style="padding:14px;background:var(--bg);border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:12px;" onclick="openMisViajesModal()">
+          <span style="font-size:22px;">🎫</span><div><div style="font-weight:700;font-size:14px;">Mis viajes</div><div style="font-size:12px;color:var(--text-muted);">Historial y cancelaciones</div></div>
+        </div>
+        <div style="padding:14px;background:var(--bg);border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:12px;" onclick="openSoporteModal()">
+          <span style="font-size:22px;">🆘</span><div><div style="font-weight:700;font-size:14px;">Soporte</div><div style="font-size:12px;color:var(--text-muted);">Ayuda y contacto</div></div>
+        </div>
+      </div>
+      <div style="margin-top:14px;" id="opcionesAuthBtns">
+        <div style="display:flex;gap:8px;">
+          <button class="btn-full" style="background:var(--bg);color:var(--text);border:1.5px solid var(--border);" onclick="closeModal('opcionesModal');openModal('login')">Iniciar sesión</button>
+          <button class="btn-full" onclick="closeModal('opcionesModal');openModal('register')">Crear cuenta</button>
+        </div>
+      </div>
+      <div style="margin-top:14px;" id="opcionesLogoutBtn" class="hidden">
+        <button class="btn-full" style="background:#fee2e2;color:#dc2626;border:1.5px solid #fca5a5;" onclick="cerrarSesion();closeModal('opcionesModal')">🚪 Cerrar sesión</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ MODAL PERFIL ══════ -->
+<div class="modal-overlay" id="perfilModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-header-left"><div class="modal-header-icon">👤</div><div><h3>Mi perfil</h3><p>Tus datos en Rutaya</p></div></div>
+      <button class="btn-close" onclick="closeModal('perfilModal')">✕</button>
+    </div>
+    <div class="modal-body" id="perfilContent"></div>
+  </div>
+</div>
+
+<!-- ══════ MODAL MIS VIAJES ══════ -->
+<div class="modal-overlay" id="misViajesModal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <div class="modal-header-left"><div class="modal-header-icon">🎫</div><div><h3>Mis viajes</h3><p>Historial de pasajes comprados</p></div></div>
+      <button class="btn-close" onclick="closeModal('misViajesModal')">✕</button>
+    </div>
+    <div class="modal-body" id="misViajesContent"></div>
+  </div>
+</div>
+
+<!-- ══════ MODAL SOPORTE ══════ -->
+<div class="modal-overlay" id="soporteModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-header-left"><div class="modal-header-icon">🆘</div><div><h3>Soporte</h3><p>Estamos para ayudarte</p></div></div>
+      <button class="btn-close" onclick="closeModal('soporteModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <a href="https://wa.me/51987654321" target="_blank" style="display:flex;align-items:center;gap:14px;padding:16px;background:#dcfce7;border-radius:12px;text-decoration:none;color:#15803d;font-weight:600;">
+          <span style="font-size:28px;">💬</span><div><div style="font-size:15px;font-weight:700;">WhatsApp</div><div style="font-size:13px;font-weight:400;">+51 987 654 321 · Respuesta en minutos</div></div>
+        </a>
+        <a href="mailto:soporte@rutaya.pe" style="display:flex;align-items:center;gap:14px;padding:16px;background:#dbeafe;border-radius:12px;text-decoration:none;color:#1d4ed8;font-weight:600;">
+          <span style="font-size:28px;">📧</span><div><div style="font-size:15px;font-weight:700;">Correo</div><div style="font-size:13px;font-weight:400;">soporte@rutaya.pe · Respuesta en 24h</div></div>
+        </a>
+        <div style="padding:14px;background:#fef9c3;border-radius:12px;">
+          <div style="font-weight:700;color:#854d0e;margin-bottom:6px;">🕐 Horario de atención</div>
+          <div style="font-size:13px;color:#713f12;">Lun-Sáb: 6:00 AM – 10:00 PM · Dom: 7:00 AM – 8:00 PM</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ MODAL RECUPERAR CONTRASEÑA ══════ -->
+<div class="modal-overlay" id="recuperarModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-header-left"><div class="modal-header-icon">🔑</div><div><h3>Recuperar contraseña</h3><p>Te enviaremos instrucciones</p></div></div>
+      <button class="btn-close" onclick="closeModal('recuperarModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="input-group"><label>Correo electrónico de tu cuenta</label><input type="email" id="recuperarEmail" placeholder="tucorreo@gmail.com"></div>
+      <button class="btn-full" onclick="enviarRecuperacion()" id="btnRecuperar">Enviar instrucciones</button>
+      <p style="font-size:13px;color:var(--text-muted);text-align:center;margin-top:12px;">Si el correo está registrado, recibirás un enlace en minutos.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SUCCESS PAGE ══════ -->
+<div class="success-page" id="successPage">
+  <div class="success-icon">✓</div>
+  <h2>¡Compra exitosa!</h2>
+  <p>Tu pasaje ha sido confirmado. Guarda tu código de ticket.</p>
+  <div class="ticket-box" id="ticketPrintArea">
+    <div class="ticket-header">
+      <img src="/logo.png" class="ticket-logo" alt="Rutaya">
+      <div class="ticket-route" id="successRuta">Origen → Destino</div>
+      <div style="color:var(--text-muted);font-size:13px;" id="successFecha">Hoy</div>
+    </div>
+    <div class="ticket-row"><span class="lbl">Pasajero</span><span class="val" id="successPasajero">—</span></div>
+    <div class="ticket-row"><span class="lbl">DNI</span><span class="val" id="successDni">—</span></div>
+    <div class="ticket-row"><span class="lbl">Hora salida</span><span class="val" id="successHora">—</span></div>
+    <div class="ticket-row"><span class="lbl">Asiento</span><span class="val" id="ticketSeat">—</span></div>
+    <div class="ticket-row"><span class="lbl">Empresa</span><span class="val" id="successEmpresa">—</span></div>
+    <div class="ticket-row"><span class="lbl">Método de pago</span><span class="val" id="successMethod">—</span></div>
+    <div class="ticket-row" style="border:none;"><span class="lbl">Total pagado</span><span class="val" style="color:var(--primary);font-size:18px;" id="successTotal">—</span></div>
+    <div class="ticket-code" id="ticketCode">RUT-XXXXXXXX</div>
+  </div>
+  <div class="success-btns">
+    <button class="btn-lg primary" onclick="descargarBoleto()">⬇️ Descargar boleto</button>
+    <button class="btn-lg secondary" onclick="window.print()">🖨️ Imprimir</button>
+    <button class="btn-lg secondary" onclick="compartirBoleto()">📤 Compartir</button>
+  </div>
+  <button class="btn-lg secondary" style="margin-top:8px;" onclick="document.getElementById('successPage').classList.remove('active')">← Volver al inicio</button>
+</div>
+
+<!-- ══════ PWA INSTALL BANNER ══════ -->
+<div id="installBanner">
+  <img src="/logo.png" alt="Rutaya">
+  <div class="install-text">
+    <div class="title">Instalar Rutaya</div>
+    <div class="sub">Agregar a tu pantalla de inicio como app</div>
+  </div>
+  <div class="install-btns">
+    <button class="btn-install-close" onclick="cerrarBannerInstall()">Ahora no</button>
+    <button class="btn-install" onclick="instalarApp()">📲 Instalar</button>
+  </div>
+</div>
+
+<!-- ══════ TOAST ══════ -->
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
+
+<script>
+// ─── SESIÓN ───
+let sesionUsuario = JSON.parse(sessionStorage.getItem('rutaya_user') || 'null');
+let ultimaCompra = null;
+
+function actualizarNavSesion() {
+  const loggedIn = !!sesionUsuario;
+  document.getElementById('navCta').style.display = loggedIn ? 'none' : 'flex';
+  document.getElementById('navUser').style.display = loggedIn ? 'flex' : 'none';
+  if (loggedIn) document.getElementById('navUserName').textContent = '👤 ' + sesionUsuario.nombre;
+  const authBtns = document.getElementById('opcionesAuthBtns');
+  const logoutBtn = document.getElementById('opcionesLogoutBtn');
+  if (authBtns) authBtns.classList.toggle('hidden', loggedIn);
+  if (logoutBtn) logoutBtn.classList.toggle('hidden', !loggedIn);
+  // Mostrar/ocultar formulario de invitado en pago
+  const guestBox = document.getElementById('guestFormBox');
+  if (guestBox) guestBox.style.display = loggedIn ? 'none' : 'block';
+}
+
+function cerrarSesion() {
+  sesionUsuario = null;
+  sessionStorage.removeItem('rutaya_user');
+  actualizarNavSesion();
+  showToast('✅ Sesión cerrada correctamente');
+}
+
+// ─── RUTAS ───
+let rutas = [];
+let currentRutaData = null;
+let selectedSeat = null;
+let fechaViajeSeleccionada = new Date().toISOString().split('T')[0];
+
+async function cargarRutas() {
+  try {
+    const res = await fetch('/api/rutas');
+    rutas = await res.json();
+    renderRutas();
+  } catch(e) { console.error(e); }
+}
+
+function renderRutas() {
+  const grid = document.getElementById('rutasGrid');
+  if (!grid) return;
+  if (rutas.length === 0) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted);">No hay rutas disponibles aún.</div>';
+    return;
+  }
+  grid.innerHTML = rutas.map(r => `
+    <div class="ruta-card" onclick="openSeatModalForRuta(${r.id})">
+      <div class="ruta-img" style="background:linear-gradient(135deg,${r.color}22,${r.color}55);">
+        <span style="font-size:56px;">${r.emoji||'🚌'}</span>
+        <div class="ruta-badge">Popular</div>
+        <div class="ruta-seats-badge seat-available" id="badge-${r.id}">🟢 cargando...</div>
+      </div>
+      <div class="ruta-body">
+        <div class="ruta-route"><span>${r.origen}</span><span class="arrow">→</span><span>${r.destino}</span></div>
+        <div class="ruta-meta"><span>🕐 ${r.duracion||'—'}</span><span>🚌 ${r.salidas||'—'}</span></div>
+        <div class="ruta-price">
+          <div><div class="since">Desde</div><div class="amount">S/ ${r.precio}</div></div>
+          <button class="btn-reservar" onclick="event.stopPropagation();openSeatModalForRuta(${r.id})">Reservar</button>
+        </div>
+      </div>
+    </div>`).join('');
+  rutas.forEach(r => actualizarBadge(r.id,'badge-'));
+}
+
+function renderRutasModal() {
+  const grid = document.getElementById('rutasModalGrid');
+  if (!grid) return;
+  grid.innerHTML = rutas.map(r => `
+    <div class="ruta-modal-card" onclick="closeModal('rutasModal');openSeatModalForRuta(${r.id})">
+      <div class="route-title"><span>${r.emoji||'🚌'}</span>${r.origen} <span class="route-arrow">→</span> ${r.destino}</div>
+      <div class="route-info"><span>🕐 ${r.duracion||'—'}</span><span>📅 ${r.salidas||'—'}</span></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div class="route-price">S/ ${r.precio}</div>
+        <span class="ruta-seats-badge seat-available" id="mbadge-${r.id}" style="position:static;">🟢 ...</span>
+      </div>
+    </div>`).join('');
+  rutas.forEach(r => actualizarBadge(r.id,'mbadge-'));
+}
+
+async function actualizarBadge(rutaId, prefix) {
+  try {
+    const res = await fetch(`/api/rutas/${rutaId}/asientos-ocupados?fecha=${fechaViajeSeleccionada}`);
+    const data = await res.json();
+    const el = document.getElementById(prefix + rutaId);
+    if (!el) return;
+    const libres = data.libres;
+    el.className = 'ruta-seats-badge ' + (libres===0 ? 'seat-full' : libres<=5 ? 'seat-few' : 'seat-available');
+    if (prefix==='mbadge-') el.style.position = 'static';
+    el.textContent = libres===0 ? '🔴 Lleno' : libres<=5 ? `🟡 ${libres} asientos` : `🟢 ${libres} asientos`;
+  } catch(e) {}
+}
+
+async function buildSeatMap(rutaId) {
+  const grid = document.getElementById('seatsGrid');
+  grid.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);">Cargando asientos...</div>';
+  try {
+    const res = await fetch(`/api/rutas/${rutaId}/asientos-ocupados?fecha=${fechaViajeSeleccionada}`);
+    const data = await res.json();
+    const ocupados = data.ocupados || [];
+    let html = '';
+    for (let i=1;i<=40;i++) {
+      const taken = ocupados.includes(i);
+      html += `<button class="seat-btn ${taken?'taken':'available'}" id="seat-${i}" ${taken?'disabled':`onclick="selectSeat(${i})"`}>${i}</button>`;
+      if (i%20===0&&i!==40) html += `<div class="seat-divider"></div>`;
+    }
+    grid.innerHTML = html;
+  } catch(e) {
+    grid.innerHTML = '<div style="text-align:center;padding:20px;color:var(--primary);">Error cargando asientos</div>';
+  }
+}
+
+function selectSeat(num) {
+  if (selectedSeat) { const prev=document.getElementById('seat-'+selectedSeat); if(prev) prev.className='seat-btn available'; }
+  selectedSeat = num;
+  document.getElementById('seat-'+num).className = 'seat-btn selected';
+  const tipo = num<=10?'Preferencial (1er piso)':num<=20?'Normal (1er piso)':'Normal (2do piso)';
+  document.getElementById('selectedSeatNum').textContent = num;
+  document.getElementById('selectedSeatType').textContent = tipo;
+  document.getElementById('btnConfirmSeat').disabled = false;
+  document.getElementById('btnConfirmSeat').style.opacity = '1';
+  showToast(`Asiento ${num} seleccionado`);
+}
+
+async function cambiarFechaViaje() {
+  fechaViajeSeleccionada = document.getElementById('fechaViajeInput').value;
+  actualizarTextoFecha();
+  selectedSeat = null;
+  document.getElementById('selectedSeatNum').textContent = '—';
+  document.getElementById('selectedSeatType').textContent = 'Toca un asiento verde';
+  document.getElementById('btnConfirmSeat').disabled = true;
+  document.getElementById('btnConfirmSeat').style.opacity = '0.4';
+  if (currentRutaData) await buildSeatMap(currentRutaData.id);
+}
+
+function actualizarTextoFecha() {
+  const f = new Date(fechaViajeSeleccionada + 'T00:00:00');
+  document.getElementById('seatTripFecha').textContent = f.toLocaleDateString('es-PE',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('seatModalRoute').textContent = currentRutaData ? `${currentRutaData.origen} → ${currentRutaData.destino}` : 'Selecciona asiento';
+}
+
+function confirmarAsiento() {
+  if (!selectedSeat||!currentRutaData) return;
+  const tipo = selectedSeat<=10?'Preferencial':'Normal';
+  const f = new Date(fechaViajeSeleccionada+'T00:00:00');
+  const fecha = f.toLocaleDateString('es-PE',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+  document.getElementById('resumenOrigen').textContent = currentRutaData.origen;
+  document.getElementById('resumenDestino').textContent = currentRutaData.destino;
+  document.getElementById('resumenFecha').textContent = fecha;
+  document.getElementById('resumenHora').textContent = currentRutaData.salidas?.startsWith('6')?'06:00 AM':'07:00 AM';
+  document.getElementById('resumenAsiento').textContent = `${selectedSeat} – ${tipo}`;
+  document.getElementById('resumenEmpresa').textContent = currentRutaData.empresa||'—';
+  document.getElementById('resumenPasajero').textContent = sesionUsuario ? sesionUsuario.nombre + ' ' + (sesionUsuario.apellido||'') : '(Invitado - completa tus datos abajo)';
+  document.getElementById('resumenPrecio').textContent = `S/ ${currentRutaData.precio}.00`;
+  document.getElementById('resumenTotal').textContent = `S/ ${(currentRutaData.precio+2).toFixed(2)}`;
+  // Mostrar/ocultar formulario invitado
+  const guestBox = document.getElementById('guestFormBox');
+  guestBox.style.display = sesionUsuario ? 'none' : 'block';
+  closeModal('seatModal');
+  document.getElementById('pagosModal').classList.add('active');
+}
+
+// ─── MODALES ───
+function openRutasModal() { renderRutasModal(); document.getElementById('rutasModal').classList.add('active'); }
+
+async function openSeatModalForRuta(rutaId) {
+  const r = rutas.find(x=>x.id===rutaId);
+  if (r) {
+    currentRutaData = r;
+    document.getElementById('seatTripRoute').textContent = `${r.origen} → ${r.destino}`;
+    document.getElementById('seatTripEmpresa').textContent = r.empresa||'—';
+    document.getElementById('seatTripSalida').textContent = r.salidas?.startsWith('6')?'06:00 AM':'07:00 AM';
+    document.getElementById('seatTripDuracion').textContent = r.duracion||'—';
+    document.getElementById('seatPrice').textContent = `S/ ${r.precio}.00`;
+  }
+  const hoy = new Date().toISOString().split('T')[0];
+  fechaViajeSeleccionada = hoy;
+  const inputFecha = document.getElementById('fechaViajeInput');
+  inputFecha.min = hoy; inputFecha.value = hoy;
+  actualizarTextoFecha();
+  selectedSeat = null;
+  document.getElementById('selectedSeatNum').textContent = '—';
+  document.getElementById('selectedSeatType').textContent = 'Toca un asiento verde';
+  document.getElementById('btnConfirmSeat').disabled = true;
+  document.getElementById('btnConfirmSeat').style.opacity = '0.4';
+  document.getElementById('seatModal').classList.add('active');
+  await buildSeatMap(rutaId);
+}
+
+function openModal(tab) { document.getElementById('authModal').classList.add('active'); switchTab(tab); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+function openOpcionesModal() { actualizarNavSesion(); document.getElementById('opcionesModal').classList.add('active'); }
+function openSoporteModal() { closeModal('opcionesModal'); document.getElementById('soporteModal').classList.add('active'); }
+function openRecuperarModal() { closeModal('authModal'); document.getElementById('recuperarModal').classList.add('active'); }
+
+document.querySelectorAll('.modal-overlay').forEach(o=>{
+  o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('active'); });
+});
+
+function openPerfilModal() {
+  closeModal('opcionesModal');
+  const el = document.getElementById('perfilContent');
+  if (!sesionUsuario) {
+    el.innerHTML = `<p style="text-align:center;color:var(--text-muted);margin-bottom:16px;">Inicia sesión para ver tu perfil.</p><button class="btn-full" onclick="closeModal('perfilModal');openModal('login')">Iniciar sesión</button>`;
+  } else {
+    el.innerHTML = `
+      <div style="text-align:center;margin-bottom:20px;">
+        <div style="width:64px;height:64px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:#fff;margin:0 auto 10px;">${sesionUsuario.nombre[0].toUpperCase()}</div>
+        <h3>${sesionUsuario.nombre} ${sesionUsuario.apellido||''}</h3>
+        <p style="color:var(--text-muted);font-size:14px;">${sesionUsuario.email}</p>
+      </div>
+      <div style="background:#fff7ed;border-radius:10px;padding:12px 14px;font-size:13px;color:#c2410c;">✏️ Edición de perfil disponible próximamente.</div>`;
+  }
+  document.getElementById('perfilModal').classList.add('active');
+}
+
+async function openMisViajesModal() {
+  closeModal('opcionesModal');
+  document.getElementById('misViajesModal').classList.add('active');
+  const el = document.getElementById('misViajesContent');
+  if (!sesionUsuario) {
+    el.innerHTML = `<p style="text-align:center;color:var(--text-muted);margin-bottom:16px;">Inicia sesión para ver tus viajes.</p><button class="btn-full" onclick="closeModal('misViajesModal');openModal('login')">Iniciar sesión</button>`;
+    return;
+  }
+  el.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-muted);">Cargando tus viajes...</div>';
+  try {
+    const res = await fetch(`/api/compras/mis-compras?email=${encodeURIComponent(sesionUsuario.email)}`);
+    const compras = await res.json();
+    if (compras.length===0) {
+      el.innerHTML = `<div style="text-align:center;padding:40px;"><div style="font-size:48px;margin-bottom:12px;">🎫</div><p style="color:var(--text-muted);margin-bottom:16px;">Aún no tienes viajes registrados.</p><button class="btn-full" onclick="closeModal('misViajesModal');openRutasModal()">Ver rutas disponibles →</button></div>`;
+      return;
+    }
+    el.innerHTML = compras.map(c => {
+      const cancelado = c.estado==='CANCELADO';
+      const fViaje = c.fechaViaje ? new Date(c.fechaViaje+'T00:00:00').toLocaleDateString('es-PE',{day:'numeric',month:'long',year:'numeric'}) : '—';
+      const puedeCancel = !cancelado && c.fechaViaje && (new Date(c.fechaViaje+'T00:00:00')-new Date(new Date().toDateString()))>86400000;
+      return `<div style="border:1.5px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;${cancelado?'opacity:.6':''}">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <div style="font-weight:800;font-size:15px;">${c.ruta.origen} → ${c.ruta.destino}</div>
+          <div style="background:${cancelado?'#fee2e2':'#dcfce7'};color:${cancelado?'#dc2626':'#16a34a'};padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;">${cancelado?'✕ Cancelado':'✓ Confirmado'}</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:13px;color:var(--text-muted);">
+          <div>📅 ${fViaje}</div><div>🚌 ${c.ruta.empresa}</div>
+          <div>💺 Asiento ${c.numeroAsiento}</div><div>💳 ${c.metodoPago}</div>
+          <div>💰 S/ ${Number(c.total).toFixed(2)}</div>
+        </div>
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+          <code style="font-size:12px;color:var(--primary);font-weight:700;">${c.codigoTicket}</code>
+          <span style="font-size:11px;color:var(--text-muted);">${new Date(c.fechaCompra).toLocaleString('es-PE')}</span>
+        </div>
+        ${puedeCancel?`<button style="margin-top:10px;width:100%;background:#fee2e2;color:#dc2626;border:1.5px solid #fca5a5;border-radius:8px;padding:8px;font-size:13px;font-weight:600;cursor:pointer;" onclick="cancelarPasaje(${c.id})">Cancelar pasaje</button>`:''}
+        ${!cancelado&&!puedeCancel?`<div style="margin-top:8px;font-size:12px;color:#ca8a04;">⚠️ No se puede cancelar</div>`:''}
+      </div>`;
+    }).join('');
+  } catch(e) {
+    el.innerHTML = '<div style="text-align:center;padding:30px;color:var(--primary);">Error cargando viajes.</div>';
+  }
+}
+
+async function cancelarPasaje(id) {
+  if (!sesionUsuario||!confirm('¿Seguro que quieres cancelar este pasaje?')) return;
+  try {
+    const res = await fetch(`/api/compras/${id}/cancelar?email=${encodeURIComponent(sesionUsuario.email)}`,{method:'POST'});
+    const data = await res.json();
+    showToast(res.ok&&data.ok ? '✅ Pasaje cancelado' : '❌ '+(data.mensaje||'Error'));
+    if (res.ok&&data.ok) openMisViajesModal();
+  } catch(e) { showToast('⚠️ Error de conexión'); }
+}
+
+// ─── AUTH ───
+function switchTab(tab) {
+  document.querySelectorAll('#authModal .tab-btn').forEach((b,i)=>b.classList.toggle('active',(i===0&&tab==='login')||(i===1&&tab==='register')));
+  document.getElementById('tab-login').classList.toggle('active',tab==='login');
+  document.getElementById('tab-register').classList.toggle('active',tab==='register');
+  document.getElementById('modalTitle').textContent = tab==='login'?'Bienvenido a Rutaya':'Crear cuenta en Rutaya';
+}
+
+async function simLogin() {
+  const e=document.getElementById('loginEmail').value.trim();
+  const p=document.getElementById('loginPass').value;
+  if (!e||!p){showToast('Completa correo y contraseña');return;}
+  const btn=document.querySelector('#tab-login .btn-full');
+  btn.textContent='Iniciando sesión...';btn.disabled=true;
+  try {
+    const res=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:e,password:p})});
+    const data=await res.json();
+    if(!res.ok||!data.ok){showToast('❌ '+(data.mensaje||'Correo o contraseña incorrectos'));return;}
+    sesionUsuario=data.data;
+    sessionStorage.setItem('rutaya_user',JSON.stringify(sesionUsuario));
+    actualizarNavSesion();
+    showToast('✅ ¡Bienvenido '+sesionUsuario.nombre+'!');
+    closeModal('authModal');
+  } catch(err){showToast('⚠️ No se pudo conectar');}
+  finally{btn.textContent='Iniciar sesión';btn.disabled=false;}
+}
+
+async function simRegister() {
+  const n=document.getElementById('regNombre').value.trim();
+  const ape=document.getElementById('regApellido').value.trim();
+  const e=document.getElementById('regEmail').value.trim();
+  const tel=document.getElementById('regTel').value.trim();
+  const p=document.getElementById('regPass').value;
+  if(!n||!e||!p){showToast('Completa nombre, correo y contraseña');return;}
+  if(!/^\S+@\S+\.\S+$/.test(e)){showToast('❌ Correo inválido');return;}
+  if(p.length<6){showToast('❌ Contraseña mínimo 6 caracteres');return;}
+  const btn=document.querySelector('#tab-register .btn-full');
+  btn.textContent='Creando cuenta...';btn.disabled=true;
+  try {
+    const res=await fetch('/api/auth/registro',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nombre:n,apellido:ape,email:e,telefono:tel,password:p})});
+    const data=await res.json();
+    if(!res.ok||!data.ok){showToast('❌ '+(data.mensaje||'No se pudo crear la cuenta'));return;}
+    showToast('✅ Cuenta creada. Ahora inicia sesión');
+    switchTab('login');
+  } catch(err){showToast('⚠️ Error de conexión');}
+  finally{btn.textContent='Crear mi cuenta gratis';btn.disabled=false;}
+}
+
+async function enviarRecuperacion() {
+  const email=document.getElementById('recuperarEmail').value.trim();
+  if(!email){showToast('Ingresa tu correo');return;}
+  const btn=document.getElementById('btnRecuperar');
+  btn.textContent='Enviando...';btn.disabled=true;
+  await new Promise(r=>setTimeout(r,1500));
+  btn.textContent='Enviar instrucciones';btn.disabled=false;
+  showToast('✅ Si el correo está registrado, recibirás instrucciones');
+  closeModal('recuperarModal');
+}
+
+// ─── PAGO ───
+function setPayMethod(method,el) {
+  document.querySelectorAll('.pay-method').forEach(m=>m.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.pago-form').forEach(f=>f.classList.remove('active'));
+  document.getElementById('form-'+method).classList.add('active');
+}
+
+function obtenerDatosPasajero() {
+  if (sesionUsuario) {
+    return {
+      nombrePasajero: sesionUsuario.nombre,
+      apellidoPasajero: sesionUsuario.apellido || '',
+      emailPasajero: sesionUsuario.email,
+      telefonoPasajero: '',
+      dniPasajero: ''
+    };
+  }
+  // Invitado — validar formulario
+  const nombre = document.getElementById('gNombre').value.trim();
+  const apellido = document.getElementById('gApellido').value.trim();
+  const dni = document.getElementById('gDni').value.trim();
+  const telefono = document.getElementById('gTelefono').value.trim();
+  const email = document.getElementById('gEmail').value.trim();
+  if (!nombre||!apellido||!dni||!telefono||!email) {
+    showToast('❌ Completa todos tus datos personales para el boleto');
+    return null;
+  }
+  if (!/^\S+@\S+\.\S+$/.test(email)) { showToast('❌ Correo electrónico inválido'); return null; }
+  if (!/^\d{8}$/.test(dni)) { showToast('❌ DNI debe tener 8 dígitos'); return null; }
+  return { nombrePasajero:nombre, apellidoPasajero:apellido, emailPasajero:email, telefonoPasajero:telefono, dniPasajero:dni };
+}
+
+async function confirmarPago(method) {
+  if (!currentRutaData||!selectedSeat) { showToast('Selecciona una ruta y asiento primero'); return; }
+  const datosPasajero = obtenerDatosPasajero();
+  if (!datosPasajero) return;
+  const btn = event.target;
+  const orig = btn.textContent;
+  btn.textContent='Procesando...'; btn.disabled=true;
+  try {
+    const res = await fetch('/api/compras',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        rutaId: currentRutaData.id,
+        numeroAsiento: selectedSeat,
+        metodoPago: method,
+        fechaViaje: fechaViajeSeleccionada,
+        ...datosPasajero
+      })
+    });
+    const data = await res.json();
+    if (!res.ok||!data.ok) { showToast('❌ '+(data.mensaje||'Error al procesar el pago')); return; }
+
+    const fViaje = new Date(fechaViajeSeleccionada+'T00:00:00');
+    const fechaTexto = fViaje.toLocaleDateString('es-PE',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    const d = data.data;
+    const horaSalida = currentRutaData.salidas?.startsWith('6')?'06:00 AM':'07:00 AM';
+    const tipoAsiento = selectedSeat<=10?'Preferencial':'Normal';
+    const nombreCompleto = `${datosPasajero.nombrePasajero} ${datosPasajero.apellidoPasajero}`.trim();
+
+    ultimaCompra = {
+      origen:d.origen, destino:d.destino, fecha:fechaTexto, hora:horaSalida,
+      pasajero:nombreCompleto, dni:datosPasajero.dniPasajero||'—',
+      asiento:selectedSeat, tipoAsiento, empresa:d.empresa||currentRutaData.empresa,
+      metodoPago:method, total:Number(d.total).toFixed(2), codigo:d.codigoTicket
+    };
+
+    document.getElementById('successRuta').innerHTML = `${d.origen} <span class="ticket-arrow">→</span> ${d.destino}`;
+    document.getElementById('successFecha').textContent = fechaTexto;
+    document.getElementById('successHora').textContent = horaSalida;
+    document.getElementById('successPasajero').textContent = nombreCompleto;
+    document.getElementById('successDni').textContent = datosPasajero.dniPasajero||'—';
+    document.getElementById('successEmpresa').textContent = ultimaCompra.empresa;
+    document.getElementById('successMethod').textContent = method;
+    document.getElementById('ticketSeat').textContent = `${selectedSeat} – ${tipoAsiento}`;
+    document.getElementById('ticketCode').textContent = d.codigoTicket;
+    document.getElementById('successTotal').textContent = `S/ ${ultimaCompra.total}`;
+
+    closeModal('pagosModal');
+    document.getElementById('successPage').classList.add('active');
+    actualizarBadge(currentRutaData.id,'badge-');
+  } catch(err) { showToast('⚠️ Error de conexión. Intenta de nuevo.'); }
+  finally { btn.textContent=orig; btn.disabled=false; }
+}
+
+// ─── BOLETO ───
+function generarHtmlBoleto() {
+  if (!ultimaCompra) return '';
+  const c = ultimaCompra;
+  return `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Boleto Rutaya - ${c.codigo}</title>
+<style>body{font-family:'Segoe UI',Arial,sans-serif;background:#f3f4f6;padding:30px}
+.ticket{max-width:420px;margin:0 auto;background:#fff;border-radius:16px;padding:28px;border:2px dashed #E05A1E;box-shadow:0 4px 20px rgba(0,0,0,.08)}
+.logo{text-align:center;font-size:22px;font-weight:800;color:#E05A1E;margin-bottom:8px}
+.logo img{height:56px;object-fit:contain}
+.route{text-align:center;font-size:22px;font-weight:800;margin:12px 0 4px}
+.arrow{color:#E05A1E}.fecha{text-align:center;color:#6B7280;font-size:13px;margin-bottom:16px}
+.row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #E5E7EB;font-size:14px}
+.row:last-child{border-bottom:none}.lbl{color:#6B7280}.val{font-weight:700}
+.total{color:#E05A1E;font-size:18px}
+.code{text-align:center;background:#1A1A2E;color:#fff;padding:14px;border-radius:10px;font-size:18px;font-weight:800;letter-spacing:2px;margin-top:16px}
+.footer{text-align:center;color:#9CA3AF;font-size:12px;margin-top:14px}
+</style></head><body><div class="ticket">
+<div class="logo"><img src="/logo.png" alt="Rutaya"><div>RUTAYA</div></div>
+<div class="route">${c.origen} <span class="arrow">→</span> ${c.destino}</div>
+<div class="fecha">${c.fecha}</div>
+<div class="row"><span class="lbl">Pasajero</span><span class="val">${c.pasajero}</span></div>
+<div class="row"><span class="lbl">DNI</span><span class="val">${c.dni}</span></div>
+<div class="row"><span class="lbl">Hora salida</span><span class="val">${c.hora}</span></div>
+<div class="row"><span class="lbl">Asiento</span><span class="val">${c.asiento} – ${c.tipoAsiento}</span></div>
+<div class="row"><span class="lbl">Empresa</span><span class="val">${c.empresa}</span></div>
+<div class="row"><span class="lbl">Método de pago</span><span class="val">${c.metodoPago}</span></div>
+<div class="row"><span class="lbl">Total pagado</span><span class="val total">S/ ${c.total}</span></div>
+<div class="code">${c.codigo}</div>
+<div class="footer">Presenta este boleto al conductor antes de abordar.<br>Gracias por viajar con Rutaya 🧡</div>
+</div></body></html>`;
+}
+
+function descargarBoleto() {
+  if (!ultimaCompra){showToast('No hay boleto para descargar');return;}
+  const blob = new Blob([generarHtmlBoleto()],{type:'text/html'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download=`Boleto-Rutaya-${ultimaCompra.codigo}.html`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('✅ Boleto descargado. Ábrelo y usa Ctrl+P para imprimir como PDF');
+}
+
+async function compartirBoleto() {
+  if (!ultimaCompra){showToast('No hay boleto para compartir');return;}
+  const c = ultimaCompra;
+  const texto = `🚌 Mi boleto Rutaya\n${c.origen} → ${c.destino}\n📅 ${c.fecha}\n💺 Asiento ${c.asiento}\n🎫 Código: ${c.codigo}`;
+  if (navigator.share) {
+    try { await navigator.share({title:'Mi boleto Rutaya',text:texto}); } catch(e){}
+  } else {
+    try { await navigator.clipboard.writeText(texto); showToast('📋 Datos copiados al portapapeles'); }
+    catch(e){ showToast('No se pudo compartir'); }
+  }
+}
+
+// ─── BUSCADOR ───
+function buscarRutas() {
+  const o=document.getElementById('origen').value;
+  const d=document.getElementById('destino').value;
+  const f=document.getElementById('fechaBusqueda').value;
+  if(!o||!d){showToast('Selecciona origen y destino');return;}
+  if(o===d){showToast('Origen y destino deben ser distintos');return;}
+  const ruta=rutas.find(r=>r.origen.toLowerCase()===o&&r.destino.toLowerCase()===d);
+  if(ruta){
+    if(f) { fechaViajeSeleccionada=f; }
+    showToast(`Buscando ${o} → ${d}...`);
+    setTimeout(()=>openSeatModalForRuta(ruta.id),600);
+  } else {
+    showToast(`No hay rutas disponibles de ${o} a ${d}`);
+  }
+}
+
+// ─── FORMATO TARJETA ───
+function formatCard(el){let v=el.value.replace(/\D/g,'').substr(0,16);el.value=v.replace(/(.{4})/g,'$1 ').trim();}
+function formatExp(el){let v=el.value.replace(/\D/g,'');if(v.length>=2)v=v.substr(0,2)+'/'+v.substr(2,2);el.value=v;}
+
+// ─── TOAST ───
+function showToast(msg){
+  const t=document.getElementById('toast');
+  document.getElementById('toastMsg').textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+// ─── INIT ───
+document.addEventListener('DOMContentLoaded',()=>{
+  // Fecha min en buscador
+  const hoy=new Date().toISOString().split('T')[0];
+  const fb=document.getElementById('fechaBusqueda');
+  if(fb){fb.min=hoy;fb.value=hoy;}
+  actualizarNavSesion();
+  cargarRutas();
+// ─── PWA: REGISTRO DEL SERVICE WORKER ───
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(reg => console.log('[Rutaya] Service Worker registrado:', reg.scope))
+      .catch(err => console.log('[Rutaya] Error al registrar SW:', err));
+  });
+}
+
+// ─── PWA: BANNER DE INSTALACIÓN ───
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+
+  // Mostrar banner de instalación después de 3 segundos
+  setTimeout(() => {
+    const banner = document.getElementById('installBanner');
+    if (banner) banner.style.display = 'flex';
+  }, 3000);
+});
+
+function instalarApp() {
+  const banner = document.getElementById('installBanner');
+  if (banner) banner.style.display = 'none';
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(result => {
+    if (result.outcome === 'accepted') {
+      showToast('✅ ¡Rutaya instalada! Búscala en tu pantalla de inicio');
+    }
+    deferredPrompt = null;
+  });
+}
+
+function cerrarBannerInstall() {
+  const banner = document.getElementById('installBanner');
+  if (banner) banner.style.display = 'none';
+}
+
+window.addEventListener('appinstalled', () => {
+  showToast('🎉 ¡Rutaya instalada correctamente!');
+  const banner = document.getElementById('installBanner');
+  if (banner) banner.style.display = 'none';
+  deferredPrompt = null;
+});
+</script>
+</body>
+</html>
